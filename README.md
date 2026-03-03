@@ -3,6 +3,13 @@
 A `tmux` theme plugin inspired by Cyberpunk 2077 aesthetics, built for
 `tmux 3.2+` and installable with [TPM](https://github.com/tmux-plugins/tpm).
 
+CyberHUD Pro defaults include:
+
+- mode awareness (`PREFIX` / `COPY` / `SYNC` / `LIVE`)
+- Git segment with branch, dirty marker, and upstream divergence arrows
+- system telemetry segments (`NET`, `CPU`, `MEM`, `BAT`)
+- neon pane and window indicators for better focus/alerts
+
 Default palette:
 
 - `#000000`
@@ -42,10 +49,17 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-separator-left` | `` | Left-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-separator-right` | `` | Right-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-show-session` | `on` | Show session block in status-left. |
+| `@cyberpunk-show-mode` | `on` | Show mode block (`PREFIX`/`COPY`/`SYNC`/`LIVE`) in status-left. |
 | `@cyberpunk-show-git` | `on` | Show Git segment in status-right (uses active pane path). |
 | `@cyberpunk-git-show-dirty` | `on` | Append `*` when working tree has changes. |
 | `@cyberpunk-git-show-updown` | `on` | Append `↑N` / `↓N` when branch diverges from upstream. |
 | `@cyberpunk-git-prefix` | `git:` | Prefix rendered before branch name. |
+| `@cyberpunk-show-network` | `on` | Show network latency segment. |
+| `@cyberpunk-network-host` | `1.1.1.1` | Host used for `NET` latency probe. |
+| `@cyberpunk-network-timeout-ms` | `250` | Network probe timeout in milliseconds. |
+| `@cyberpunk-show-cpu` | `on` | Show CPU load segment. |
+| `@cyberpunk-show-memory` | `on` | Show memory usage segment. |
+| `@cyberpunk-show-battery` | `on` | Show battery/AC segment. |
 | `@cyberpunk-show-host` | `on` | Show host block in status-right. |
 | `@cyberpunk-show-time` | `on` | Show time block in status-right. |
 | `@cyberpunk-color-bg` | `#000000` | Base background color. |
@@ -61,6 +75,8 @@ set -g @cyberpunk-nerd-fonts 'on'
 set -g @cyberpunk-show-git 'on'
 set -g @cyberpunk-git-show-updown 'on'
 set -g @cyberpunk-git-prefix 'branch:'
+set -g @cyberpunk-show-network 'off'
+set -g @cyberpunk-show-battery 'off'
 set -g @cyberpunk-show-host 'off'
 set -g @cyberpunk-color-accent '#ffe600'
 ```
@@ -74,6 +90,8 @@ shellcheck cyberpunk.tmux scripts/*.sh
 tests/git_info_test.sh
 tests/git_segment_test.sh
 tests/status_git_format_test.sh
+tests/system_info_test.sh
+tests/cyberhud_pro_format_test.sh
 ```
 
 ## Troubleshooting

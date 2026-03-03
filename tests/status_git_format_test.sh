@@ -45,6 +45,10 @@ socket_b="cp-test-status-b"
 tmux -L "$socket_a" -f /dev/null new-session -d -s test -c /tmp
 tmux -L "$socket_a" set-option -g @cyberpunk-show-host off
 tmux -L "$socket_a" set-option -g @cyberpunk-show-time off
+tmux -L "$socket_a" set-option -g @cyberpunk-show-network off
+tmux -L "$socket_a" set-option -g @cyberpunk-show-cpu off
+tmux -L "$socket_a" set-option -g @cyberpunk-show-memory off
+tmux -L "$socket_a" set-option -g @cyberpunk-show-battery off
 tmux -L "$socket_a" set-option -g @cyberpunk-show-git on
 tmux -L "$socket_a" run-shell "$REPO_ROOT/cyberpunk.tmux"
 status_right_git="$(tmux -L "$socket_a" show-options -gqv status-right)"
@@ -59,6 +63,10 @@ assert_not_contains "$status_right_git" "#{?#{!=:#(" "git segment must not use t
 tmux -L "$socket_b" -f /dev/null new-session -d -s test -c /tmp
 tmux -L "$socket_b" set-option -g @cyberpunk-show-host off
 tmux -L "$socket_b" set-option -g @cyberpunk-show-time off
+tmux -L "$socket_b" set-option -g @cyberpunk-show-network off
+tmux -L "$socket_b" set-option -g @cyberpunk-show-cpu off
+tmux -L "$socket_b" set-option -g @cyberpunk-show-memory off
+tmux -L "$socket_b" set-option -g @cyberpunk-show-battery off
 tmux -L "$socket_b" set-option -g @cyberpunk-show-git off
 tmux -L "$socket_b" run-shell "$REPO_ROOT/cyberpunk.tmux"
 status_right_no_git="$(tmux -L "$socket_b" show-options -gqv status-right)"

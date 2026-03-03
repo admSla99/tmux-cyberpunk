@@ -24,21 +24,62 @@ build_separator() {
   printf '#[fg=%s,bg=%s]%s' "$fg" "$bg" "$separator"
 }
 
+append_left_segment() {
+  local segment_fg segment_bg content
+  segment_fg="$1"
+  segment_bg="$2"
+  content="$3"
+
+  if is_true "$nerd_fonts"; then
+    status_left="$status_left$(build_separator "$segment_bg" "$CYBERPUNK_COLOR_BG" "$separator_left")"
+  fi
+
+  status_left="$status_left$(build_segment "$segment_fg" "$segment_bg" "$content" "$padding_size")"
+
+  if is_true "$nerd_fonts"; then
+    status_left="$status_left$(build_separator "$CYBERPUNK_COLOR_BG" "$segment_bg" "$separator_left")"
+  fi
+}
+
+append_right_segment() {
+  local segment_fg segment_bg content
+  segment_fg="$1"
+  segment_bg="$2"
+  content="$3"
+
+  if is_true "$nerd_fonts"; then
+    status_right="$status_right$(build_separator "$segment_bg" "$right_bg" "$separator_right")"
+  elif [ -n "$status_right" ]; then
+    status_right="$status_right "
+  fi
+
+  status_right="$status_right$(build_segment "$segment_fg" "$segment_bg" "$content" "$padding_size")"
+  right_bg="$segment_bg"
+  has_static_right_segments=true
+}
+
 apply_status() {
-  local padding_size nerd_fonts show_session show_git show_host show_time
-  local git_segment_script_quoted
+  local padding_size nerd_fonts show_session show_mode show_git
+  local show_network show_cpu show_memory show_battery show_host show_time
+  local mode_content network_content cpu_content memory_content battery_content
+  local git_segment_script_quoted system_info_script_quoted
   local color_bg_quoted color_primary_quoted color_accent_quoted right_bg_quoted has_static_quoted
   local has_static_right_segments
   local separator_left separator_right
   local status_left status_right
-  local right_bg segment
+  local right_bg
 
   padding_size="$(coerce_non_negative_integer "$(get_option "@cyberpunk-padding" "1")" "1")"
   nerd_fonts="$(get_option "@cyberpunk-nerd-fonts" "off")"
   separator_left="$(get_option "@cyberpunk-separator-left" "")"
   separator_right="$(get_option "@cyberpunk-separator-right" "")"
   show_session="$(get_option "@cyberpunk-show-session" "on")"
+  show_mode="$(get_option "@cyberpunk-show-mode" "on")"
   show_git="$(get_option "@cyberpunk-show-git" "on")"
+  show_network="$(get_option "@cyberpunk-show-network" "on")"
+  show_cpu="$(get_option "@cyberpunk-show-cpu" "on")"
+  show_memory="$(get_option "@cyberpunk-show-memory" "on")"
+  show_battery="$(get_option "@cyberpunk-show-battery" "on")"
   show_host="$(get_option "@cyberpunk-show-host" "on")"
   show_time="$(get_option "@cyberpunk-show-time" "on")"
 
@@ -46,43 +87,45 @@ apply_status() {
   status_right=""
 
   if is_true "$show_session"; then
-    if is_true "$nerd_fonts"; then
-      status_left="$status_left$(build_separator "$CYBERPUNK_COLOR_PRIMARY" "$CYBERPUNK_COLOR_BG" "$separator_left")"
-    fi
+    append_left_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "#S"
+  fi
 
-    segment="$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "#S" "$padding_size")"
-    status_left="$status_left$segment"
-
-    if is_true "$nerd_fonts"; then
-      status_left="$status_left$(build_separator "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_PRIMARY" "$separator_left")"
-    fi
+  if is_true "$show_mode"; then
+    mode_content="#{?client_prefix,PREFIX,#{?pane_in_mode,COPY,#{?pane_synchronized,SYNC,LIVE}}}"
+    append_left_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "$mode_content"
   fi
 
   right_bg="$CYBERPUNK_COLOR_BG"
   has_static_right_segments=false
 
-  if is_true "$show_host"; then
-    if is_true "$nerd_fonts"; then
-      status_right="$status_right$(build_separator "$CYBERPUNK_COLOR_SECONDARY" "$right_bg" "$separator_right")"
-    fi
+  printf -v system_info_script_quoted '%q' "$CURRENT_DIR/system_info.sh"
 
-    segment="$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "#H" "$padding_size")"
-    status_right="$status_right$segment"
-    right_bg="$CYBERPUNK_COLOR_SECONDARY"
-    has_static_right_segments=true
+  if is_true "$show_network"; then
+    network_content="#(${system_info_script_quoted} network #{q:@cyberpunk-network-host} #{q:@cyberpunk-network-timeout-ms})"
+    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "$network_content"
+  fi
+
+  if is_true "$show_cpu"; then
+    cpu_content="#(${system_info_script_quoted} cpu)"
+    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$cpu_content"
+  fi
+
+  if is_true "$show_memory"; then
+    memory_content="#(${system_info_script_quoted} memory)"
+    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "$memory_content"
+  fi
+
+  if is_true "$show_battery"; then
+    battery_content="#(${system_info_script_quoted} battery)"
+    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_ACCENT" "$battery_content"
+  fi
+
+  if is_true "$show_host"; then
+    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "#H"
   fi
 
   if is_true "$show_time"; then
-    if is_true "$nerd_fonts"; then
-      status_right="$status_right$(build_separator "$CYBERPUNK_COLOR_CYAN" "$right_bg" "$separator_right")"
-    elif [ -n "$status_right" ]; then
-      status_right="$status_right "
-    fi
-
-    segment="$(build_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "%H:%M" "$padding_size")"
-    status_right="$status_right$segment"
-    right_bg="$CYBERPUNK_COLOR_CYAN"
-    has_static_right_segments=true
+    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "%H:%M"
   fi
 
   if is_true "$show_git"; then
