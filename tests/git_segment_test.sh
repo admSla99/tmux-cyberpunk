@@ -42,19 +42,52 @@ git add tracked.txt
 git commit -q -m "init"
 git checkout -q -b feature/cyberpunk-git
 
-plain_clean="$("$SCRIPT" "$WORK_REPO" "on" "git:" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "false")"
+plain_clean="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "false")"
 assert_equals "#[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git " "$plain_clean" "plain git segment formatting"
 
 echo "dirty" >> tracked.txt
-plain_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "true")"
+plain_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "true")"
 assert_equals " #[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git* " "$plain_dirty" "plain git segment with dirty marker and static-prefix spacing"
 
-nerd_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "true")"
+nerd_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "true")"
 assert_equals "#[fg=#c5003c,bg=#55ead4]>#[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git* #[fg=#000000,bg=#c5003c]>" "$nerd_dirty" "nerd-font git segment formatting"
+
+git add tracked.txt
+git commit -q -m "cleanup dirty test state"
+
+REMOTE_REPO="$TMP_DIR/remote.git"
+git init -q --bare "$REMOTE_REPO"
+git remote add origin "$REMOTE_REPO"
+git push -q -u origin feature/cyberpunk-git
+git --git-dir "$REMOTE_REPO" symbolic-ref HEAD refs/heads/feature/cyberpunk-git
+
+echo "ahead local change" >> tracked.txt
+git add tracked.txt
+git commit -q -m "ahead commit"
+
+OTHER_REPO="$TMP_DIR/other"
+git clone -q "$REMOTE_REPO" "$OTHER_REPO"
+cd "$OTHER_REPO"
+git config user.email "test@example.com"
+git config user.name "tmux-cyberpunk tests"
+git checkout -q feature/cyberpunk-git
+echo "behind remote change" >> remote.txt
+git add remote.txt
+git commit -q -m "remote commit"
+git push -q
+
+cd "$WORK_REPO"
+git fetch -q origin
+
+plain_diverged="$("$SCRIPT" "$WORK_REPO" "off" "git:" "on" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "false")"
+assert_equals "#[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git ↑1 ↓1 " "$plain_diverged" "plain git segment includes ahead/behind arrows"
+
+plain_diverged_without_arrows="$("$SCRIPT" "$WORK_REPO" "off" "git:" "off" "1" "off" ">" "#000000" "#c5003c" "#f3e600" "#000000" "false")"
+assert_equals "#[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git " "$plain_diverged_without_arrows" "plain git segment disables ahead/behind arrows"
 
 NON_GIT_DIR="$TMP_DIR/non-git"
 mkdir -p "$NON_GIT_DIR"
-non_git_output="$("$SCRIPT" "$NON_GIT_DIR" "on" "git:" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "false")"
+non_git_output="$("$SCRIPT" "$NON_GIT_DIR" "on" "git:" "on" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "false")"
 assert_empty "$non_git_output" "non git directory should return empty git segment"
 
 printf 'git_segment_test: PASS\n'

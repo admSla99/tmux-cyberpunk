@@ -53,6 +53,7 @@ tmux -L "$socket_a" kill-server
 assert_contains "$status_right_git" "scripts/git_segment.sh" "git segment should call dedicated runtime renderer script"
 assert_contains "$status_right_git" "#{q:pane_current_path}" "pane path should be shell-escaped using tmux q modifier"
 assert_contains "$status_right_git" "#{q:@cyberpunk-git-prefix}" "git prefix should be shell-escaped using tmux q modifier"
+assert_contains "$status_right_git" "#{q:@cyberpunk-git-show-updown}" "up/down toggle should be shell-escaped using tmux q modifier"
 assert_not_contains "$status_right_git" "#{?#{!=:#(" "git segment must not use tmux conditional around #() command"
 
 tmux -L "$socket_b" -f /dev/null new-session -d -s test -c /tmp

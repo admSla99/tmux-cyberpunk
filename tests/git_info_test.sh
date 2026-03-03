@@ -42,19 +42,52 @@ git add tracked.txt
 git commit -q -m "init"
 git checkout -q -b feature/cyberpunk-git
 
-clean_output="$("$SCRIPT" "$WORK_REPO" "on" "git:")"
+clean_output="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on")"
 assert_equals "git:feature/cyberpunk-git" "$clean_output" "clean branch output"
 
 echo "dirty" >> tracked.txt
-dirty_output="$("$SCRIPT" "$WORK_REPO" "on" "git:")"
+dirty_output="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on")"
 assert_equals "git:feature/cyberpunk-git*" "$dirty_output" "dirty marker output"
 
-clean_without_dirty="$("$SCRIPT" "$WORK_REPO" "off" "git:")"
+clean_without_dirty="$("$SCRIPT" "$WORK_REPO" "off" "git:" "on")"
 assert_equals "git:feature/cyberpunk-git" "$clean_without_dirty" "dirty marker disabled"
+
+git add tracked.txt
+git commit -q -m "cleanup dirty test state"
+
+REMOTE_REPO="$TMP_DIR/remote.git"
+git init -q --bare "$REMOTE_REPO"
+git remote add origin "$REMOTE_REPO"
+git push -q -u origin feature/cyberpunk-git
+git --git-dir "$REMOTE_REPO" symbolic-ref HEAD refs/heads/feature/cyberpunk-git
+
+echo "ahead local change" >> tracked.txt
+git add tracked.txt
+git commit -q -m "ahead commit"
+
+OTHER_REPO="$TMP_DIR/other"
+git clone -q "$REMOTE_REPO" "$OTHER_REPO"
+cd "$OTHER_REPO"
+git config user.email "test@example.com"
+git config user.name "tmux-cyberpunk tests"
+git checkout -q feature/cyberpunk-git
+echo "behind remote change" >> remote.txt
+git add remote.txt
+git commit -q -m "remote commit"
+git push -q
+
+cd "$WORK_REPO"
+git fetch -q origin
+
+diverged_output="$("$SCRIPT" "$WORK_REPO" "off" "git:" "on")"
+assert_equals "git:feature/cyberpunk-git ↑1 ↓1" "$diverged_output" "ahead/behind markers output"
+
+diverged_without_arrows="$("$SCRIPT" "$WORK_REPO" "off" "git:" "off")"
+assert_equals "git:feature/cyberpunk-git" "$diverged_without_arrows" "ahead/behind disabled"
 
 NON_GIT_DIR="$TMP_DIR/non-git"
 mkdir -p "$NON_GIT_DIR"
-non_git_output="$("$SCRIPT" "$NON_GIT_DIR" "on" "git:")"
+non_git_output="$("$SCRIPT" "$NON_GIT_DIR" "on" "git:" "on")"
 assert_empty "$non_git_output" "non git directory should return empty"
 
 printf 'git_info_test: PASS\n'

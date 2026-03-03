@@ -1,7 +1,5 @@
 # tmux-cyberpunk
 
-
-
 A `tmux` theme plugin inspired by Cyberpunk 2077 aesthetics, built for
 `tmux 3.2+` and installable with [TPM](https://github.com/tmux-plugins/tpm).
 
@@ -46,6 +44,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-show-session` | `on` | Show session block in status-left. |
 | `@cyberpunk-show-git` | `on` | Show Git segment in status-right (uses active pane path). |
 | `@cyberpunk-git-show-dirty` | `on` | Append `*` when working tree has changes. |
+| `@cyberpunk-git-show-updown` | `on` | Append `↑N` / `↓N` when branch diverges from upstream. |
 | `@cyberpunk-git-prefix` | `git:` | Prefix rendered before branch name. |
 | `@cyberpunk-show-host` | `on` | Show host block in status-right. |
 | `@cyberpunk-show-time` | `on` | Show time block in status-right. |
@@ -60,6 +59,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 ```tmux
 set -g @cyberpunk-nerd-fonts 'on'
 set -g @cyberpunk-show-git 'on'
+set -g @cyberpunk-git-show-updown 'on'
 set -g @cyberpunk-git-prefix 'branch:'
 set -g @cyberpunk-show-host 'off'
 set -g @cyberpunk-color-accent '#ffe600'

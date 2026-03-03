@@ -6,14 +6,15 @@ current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 path="${1:-}"
 show_dirty="${2:-on}"
 prefix="${3:-git:}"
-padding_raw="${4:-1}"
-nerd_fonts="${5:-off}"
-separator_right="${6:-}"
-color_bg="${7:-#000000}"
-color_primary="${8:-#c5003c}"
-color_accent="${9:-#f3e600}"
-right_bg="${10:-#000000}"
-has_static_right_segments="${11:-false}"
+show_updown="${4:-on}"
+padding_raw="${5:-1}"
+nerd_fonts="${6:-off}"
+separator_right="${7:-}"
+color_bg="${8:-#000000}"
+color_primary="${9:-#c5003c}"
+color_accent="${10:-#f3e600}"
+right_bg="${11:-#000000}"
+has_static_right_segments="${12:-false}"
 
 if [[ "$padding_raw" =~ ^[0-9]+$ ]]; then
   padding_size="$padding_raw"
@@ -21,7 +22,7 @@ else
   padding_size="1"
 fi
 
-git_text="$("$current_dir/git_info.sh" "$path" "$show_dirty" "$prefix")"
+git_text="$("$current_dir/git_info.sh" "$path" "$show_dirty" "$prefix" "$show_updown")"
 if [ -z "$git_text" ]; then
   exit 0
 fi

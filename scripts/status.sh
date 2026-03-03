@@ -93,7 +93,7 @@ apply_status() {
     printf -v right_bg_quoted '%q' "$right_bg"
     printf -v has_static_quoted '%q' "$has_static_right_segments"
 
-    status_right="$status_right#(${git_segment_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix} #{q:@cyberpunk-padding} #{q:@cyberpunk-nerd-fonts} #{q:@cyberpunk-separator-right} ${color_bg_quoted} ${color_primary_quoted} ${color_accent_quoted} ${right_bg_quoted} ${has_static_quoted})"
+    status_right="$status_right#(${git_segment_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix} #{q:@cyberpunk-git-show-updown} #{q:@cyberpunk-padding} #{q:@cyberpunk-nerd-fonts} #{q:@cyberpunk-separator-right} ${color_bg_quoted} ${color_primary_quoted} ${color_accent_quoted} ${right_bg_quoted} ${has_static_quoted})"
   fi
 
   tmux set-option -gq status-left "$status_left"

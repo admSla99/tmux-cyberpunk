@@ -16,6 +16,7 @@ set_defaults() {
   upsert_option "@cyberpunk-show-session" "on"
   upsert_option "@cyberpunk-show-git" "on"
   upsert_option "@cyberpunk-git-show-dirty" "on"
+  upsert_option "@cyberpunk-git-show-updown" "on"
   upsert_option "@cyberpunk-git-prefix" "git:"
   upsert_option "@cyberpunk-show-host" "on"
   upsert_option "@cyberpunk-show-time" "on"
