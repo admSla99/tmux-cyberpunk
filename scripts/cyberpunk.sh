@@ -13,6 +13,7 @@ set_defaults() {
   upsert_option "@cyberpunk-nerd-fonts" "off"
   upsert_option "@cyberpunk-separator-left" ""
   upsert_option "@cyberpunk-separator-right" ""
+  upsert_option "@cyberpunk-separator-style" "ghost"
   upsert_option "@cyberpunk-show-session" "on"
   upsert_option "@cyberpunk-show-mode" "on"
   upsert_option "@cyberpunk-show-git" "on"

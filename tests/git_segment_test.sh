@@ -52,6 +52,9 @@ assert_equals " #[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git* " "$plain_di
 nerd_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "true")"
 assert_equals "#[fg=#c5003c,bg=#55ead4]>#[fg=#f3e600,bg=#c5003c] git:feature/cyberpunk-git* #[fg=#000000,bg=#c5003c]>" "$nerd_dirty" "nerd-font git segment formatting"
 
+ghost_nerd_dirty="$("$SCRIPT" "$WORK_REPO" "on" "git:" "on" "1" "on" ">" "#000000" "#c5003c" "#f3e600" "#55ead4" "true" "ghost")"
+assert_equals "#[fg=#c5003c,bg=#000000]>#[fg=#c5003c,bg=#000000] git:feature/cyberpunk-git* " "$ghost_nerd_dirty" "ghost style should avoid filled block backgrounds"
+
 git add tracked.txt
 git commit -q -m "cleanup dirty test state"
 

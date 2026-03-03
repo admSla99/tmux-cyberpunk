@@ -48,6 +48,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-nerd-fonts` | `off` | Enable powerline separators (Nerd Fonts). |
 | `@cyberpunk-separator-left` | `` | Left-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-separator-right` | `` | Right-side separator when Nerd Fonts are enabled. |
+| `@cyberpunk-separator-style` | `ghost` | Separator rendering style: `ghost` (no filled boxes) or `legacy` (filled boxes). |
 | `@cyberpunk-show-session` | `on` | Show session block in status-left. |
 | `@cyberpunk-show-mode` | `on` | Show mode block (`PREFIX`/`COPY`/`SYNC`/`LIVE`) in status-left. |
 | `@cyberpunk-show-git` | `on` | Show Git segment in status-right (uses active pane path). |
@@ -72,6 +73,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 
 ```tmux
 set -g @cyberpunk-nerd-fonts 'on'
+set -g @cyberpunk-separator-style 'ghost'
 set -g @cyberpunk-show-git 'on'
 set -g @cyberpunk-git-show-updown 'on'
 set -g @cyberpunk-git-prefix 'branch:'

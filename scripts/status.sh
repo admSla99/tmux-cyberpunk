@@ -31,14 +31,19 @@ append_left_segment() {
   content="$3"
 
   if is_true "$nerd_fonts"; then
+    if [ "$separator_style" = "ghost" ]; then
+      status_left="$status_left$(build_separator "$segment_bg" "$CYBERPUNK_COLOR_BG" "$separator_left")"
+      status_left="$status_left$(build_segment "$segment_bg" "$CYBERPUNK_COLOR_BG" "$content" "$padding_size")"
+      return 0
+    fi
+
     status_left="$status_left$(build_separator "$segment_bg" "$CYBERPUNK_COLOR_BG" "$separator_left")"
+    status_left="$status_left$(build_segment "$segment_fg" "$segment_bg" "$content" "$padding_size")"
+    status_left="$status_left$(build_separator "$CYBERPUNK_COLOR_BG" "$segment_bg" "$separator_left")"
+    return 0
   fi
 
   status_left="$status_left$(build_segment "$segment_fg" "$segment_bg" "$content" "$padding_size")"
-
-  if is_true "$nerd_fonts"; then
-    status_left="$status_left$(build_separator "$CYBERPUNK_COLOR_BG" "$segment_bg" "$separator_left")"
-  fi
 }
 
 append_right_segment() {
@@ -48,6 +53,14 @@ append_right_segment() {
   content="$3"
 
   if is_true "$nerd_fonts"; then
+    if [ "$separator_style" = "ghost" ]; then
+      status_right="$status_right$(build_separator "$segment_bg" "$CYBERPUNK_COLOR_BG" "$separator_right")"
+      status_right="$status_right$(build_segment "$segment_bg" "$CYBERPUNK_COLOR_BG" "$content" "$padding_size")"
+      right_bg="$CYBERPUNK_COLOR_BG"
+      has_static_right_segments=true
+      return 0
+    fi
+
     status_right="$status_right$(build_separator "$segment_bg" "$right_bg" "$separator_right")"
   elif [ -n "$status_right" ]; then
     status_right="$status_right "
@@ -64,6 +77,7 @@ apply_status() {
   local mode_content network_content cpu_content memory_content battery_content
   local git_segment_script_quoted system_info_script_quoted
   local color_bg_quoted color_primary_quoted color_accent_quoted right_bg_quoted has_static_quoted
+  local separator_style
   local has_static_right_segments
   local separator_left separator_right
   local status_left status_right
@@ -73,6 +87,7 @@ apply_status() {
   nerd_fonts="$(get_option "@cyberpunk-nerd-fonts" "off")"
   separator_left="$(get_option "@cyberpunk-separator-left" "")"
   separator_right="$(get_option "@cyberpunk-separator-right" "")"
+  separator_style="$(get_option "@cyberpunk-separator-style" "ghost")"
   show_session="$(get_option "@cyberpunk-show-session" "on")"
   show_mode="$(get_option "@cyberpunk-show-mode" "on")"
   show_git="$(get_option "@cyberpunk-show-git" "on")"
@@ -136,7 +151,7 @@ apply_status() {
     printf -v right_bg_quoted '%q' "$right_bg"
     printf -v has_static_quoted '%q' "$has_static_right_segments"
 
-    status_right="$status_right#(${git_segment_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix} #{q:@cyberpunk-git-show-updown} #{q:@cyberpunk-padding} #{q:@cyberpunk-nerd-fonts} #{q:@cyberpunk-separator-right} ${color_bg_quoted} ${color_primary_quoted} ${color_accent_quoted} ${right_bg_quoted} ${has_static_quoted})"
+    status_right="$status_right#(${git_segment_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix} #{q:@cyberpunk-git-show-updown} #{q:@cyberpunk-padding} #{q:@cyberpunk-nerd-fonts} #{q:@cyberpunk-separator-right} ${color_bg_quoted} ${color_primary_quoted} ${color_accent_quoted} ${right_bg_quoted} ${has_static_quoted} #{q:@cyberpunk-separator-style})"
   fi
 
   tmux set-option -gq status-left "$status_left"

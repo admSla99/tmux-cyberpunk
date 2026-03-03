@@ -15,6 +15,7 @@ color_primary="${9:-#c5003c}"
 color_accent="${10:-#f3e600}"
 right_bg="${11:-#000000}"
 has_static_right_segments="${12:-false}"
+separator_style="${13:-legacy}"
 
 if [[ "$padding_raw" =~ ^[0-9]+$ ]]; then
   padding_size="$padding_raw"
@@ -33,6 +34,19 @@ pad="$(printf '%*s' "$padding_size" "")"
 
 case "$(printf '%s' "$nerd_fonts" | tr '[:upper:]' '[:lower:]')" in
   1 | true | on | yes | y)
+    if [ "$separator_style" = "ghost" ]; then
+      printf '#[fg=%s,bg=%s]%s#[fg=%s,bg=%s]%s%s%s' \
+        "$color_primary" \
+        "$color_bg" \
+        "$separator_right" \
+        "$color_primary" \
+        "$color_bg" \
+        "$pad" \
+        "$git_text" \
+        "$pad"
+      exit 0
+    fi
+
     printf '#[fg=%s,bg=%s]%s#[fg=%s,bg=%s]%s%s%s#[fg=%s,bg=%s]%s' \
       "$color_primary" \
       "$right_bg" \
