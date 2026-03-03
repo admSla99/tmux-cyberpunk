@@ -68,6 +68,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-color-secondary` | `#880425` | Secondary segment background color. |
 | `@cyberpunk-color-accent` | `#f3e600` | Accent text color. |
 | `@cyberpunk-color-cyan` | `#55ead4` | Highlight color for active visuals/time segment. |
+| `@cyberpunk-color-warning` | `#f3e600` | Warning/attention color (used by battery segment in CyberHUD Pro). |
 
 ### Example override
 
@@ -81,6 +82,7 @@ set -g @cyberpunk-show-network 'off'
 set -g @cyberpunk-show-battery 'off'
 set -g @cyberpunk-show-host 'off'
 set -g @cyberpunk-color-accent '#ffe600'
+set -g @cyberpunk-color-warning '#f3e600'
 ```
 
 ## Development

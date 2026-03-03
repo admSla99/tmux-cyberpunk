@@ -34,6 +34,7 @@ set_defaults() {
   upsert_option "@cyberpunk-color-secondary" "$CYBERPUNK_DEFAULT_SECONDARY"
   upsert_option "@cyberpunk-color-accent" "$CYBERPUNK_DEFAULT_ACCENT"
   upsert_option "@cyberpunk-color-cyan" "$CYBERPUNK_DEFAULT_CYAN"
+  upsert_option "@cyberpunk-color-warning" "$CYBERPUNK_DEFAULT_WARNING"
 }
 
 main() {

@@ -132,7 +132,7 @@ apply_status() {
 
   if is_true "$show_battery"; then
     battery_content="#(${system_info_script_quoted} battery)"
-    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_ACCENT" "$battery_content"
+    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_WARNING" "$battery_content"
   fi
 
   if is_true "$show_host"; then
