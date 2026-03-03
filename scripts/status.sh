@@ -24,6 +24,74 @@ build_separator() {
   printf '#[fg=%s,bg=%s]%s' "$fg" "$bg" "$separator"
 }
 
+normalize_icon_pack() {
+  case "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')" in
+    emoji | nerd | ascii | none)
+      printf '%s\n' "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')"
+      ;;
+    *)
+      printf 'emoji\n'
+      ;;
+  esac
+}
+
+icon_for() {
+  local slot pack
+  slot="$1"
+  pack="$2"
+
+  case "$pack" in
+    emoji)
+      case "$slot" in
+        session) printf '📡' ;;
+        mode_prefix) printf '⌨' ;;
+        mode_copy) printf '📋' ;;
+        mode_sync) printf '🔗' ;;
+        mode_live) printf '⚡' ;;
+        network) printf '🌐' ;;
+        cpu) printf '🧠' ;;
+        memory) printf '💾' ;;
+        battery) printf '🔋' ;;
+        host) printf '🖥' ;;
+        time) printf '🕒' ;;
+      esac
+      ;;
+    nerd)
+      case "$slot" in
+        session) printf '󰓩' ;;
+        mode_prefix) printf '󰌌' ;;
+        mode_copy) printf '󰆏' ;;
+        mode_sync) printf '󰓦' ;;
+        mode_live) printf '󱐋' ;;
+        network) printf '󰖩' ;;
+        cpu) printf '󰍛' ;;
+        memory) printf '󰘚' ;;
+        battery) printf '󰁹' ;;
+        host) printf '󰒋' ;;
+        time) printf '󱑂' ;;
+      esac
+      ;;
+    ascii)
+      case "$slot" in
+        session) printf 'S' ;;
+        mode_prefix) printf 'P' ;;
+        mode_copy) printf 'C' ;;
+        mode_sync) printf 'Y' ;;
+        mode_live) printf 'L' ;;
+        network) printf 'N' ;;
+        cpu) printf 'C' ;;
+        memory) printf 'M' ;;
+        battery) printf 'B' ;;
+        host) printf 'H' ;;
+        time) printf 'T' ;;
+      esac
+      ;;
+    none)
+      printf ''
+      ;;
+  esac
+}
+
 append_left_segment() {
   local segment_fg segment_bg content
   segment_fg="$1"
@@ -74,6 +142,10 @@ append_right_segment() {
 apply_status() {
   local padding_size nerd_fonts show_session show_mode show_git
   local show_network show_cpu show_memory show_battery show_host show_time
+  local show_icons icon_pack
+  local session_icon mode_prefix_icon mode_copy_icon mode_sync_icon mode_live_icon
+  local network_icon cpu_icon memory_icon battery_icon host_icon time_icon
+  local session_content host_content time_content
   local mode_content network_content cpu_content memory_content battery_content
   local git_segment_script_quoted system_info_script_quoted
   local color_bg_quoted color_primary_quoted color_accent_quoted right_bg_quoted has_static_quoted
@@ -97,16 +169,52 @@ apply_status() {
   show_battery="$(get_option "@cyberpunk-show-battery" "on")"
   show_host="$(get_option "@cyberpunk-show-host" "on")"
   show_time="$(get_option "@cyberpunk-show-time" "on")"
+  show_icons="$(get_option "@cyberpunk-show-icons" "on")"
+  icon_pack="$(normalize_icon_pack "$(get_option "@cyberpunk-icon-pack" "emoji")")"
+
+  session_icon=""
+  mode_prefix_icon=""
+  mode_copy_icon=""
+  mode_sync_icon=""
+  mode_live_icon=""
+  network_icon=""
+  cpu_icon=""
+  memory_icon=""
+  battery_icon=""
+  host_icon=""
+  time_icon=""
+
+  if is_true "$show_icons"; then
+    session_icon="$(icon_for session "$icon_pack")"
+    mode_prefix_icon="$(icon_for mode_prefix "$icon_pack")"
+    mode_copy_icon="$(icon_for mode_copy "$icon_pack")"
+    mode_sync_icon="$(icon_for mode_sync "$icon_pack")"
+    mode_live_icon="$(icon_for mode_live "$icon_pack")"
+    network_icon="$(icon_for network "$icon_pack")"
+    cpu_icon="$(icon_for cpu "$icon_pack")"
+    memory_icon="$(icon_for memory "$icon_pack")"
+    battery_icon="$(icon_for battery "$icon_pack")"
+    host_icon="$(icon_for host "$icon_pack")"
+    time_icon="$(icon_for time "$icon_pack")"
+  fi
 
   status_left=""
   status_right=""
 
   if is_true "$show_session"; then
-    append_left_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "#S"
+    session_content="#S"
+    if [ -n "$session_icon" ]; then
+      session_content="$session_icon $session_content"
+    fi
+    append_left_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$session_content"
   fi
 
   if is_true "$show_mode"; then
-    mode_content="#{?client_prefix,PREFIX,#{?pane_in_mode,COPY,#{?pane_synchronized,SYNC,LIVE}}}"
+    if [ -n "$mode_live_icon" ]; then
+      mode_content="#{?client_prefix,${mode_prefix_icon} PREFIX,#{?pane_in_mode,${mode_copy_icon} COPY,#{?pane_synchronized,${mode_sync_icon} SYNC,${mode_live_icon} LIVE}}}"
+    else
+      mode_content="#{?client_prefix,PREFIX,#{?pane_in_mode,COPY,#{?pane_synchronized,SYNC,LIVE}}}"
+    fi
     append_left_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "$mode_content"
   fi
 
@@ -117,30 +225,50 @@ apply_status() {
 
   if is_true "$show_network"; then
     network_content="#(${system_info_script_quoted} network #{q:@cyberpunk-network-host} #{q:@cyberpunk-network-timeout-ms})"
+    if [ -n "$network_icon" ]; then
+      network_content="$network_icon $network_content"
+    fi
     append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$network_content"
   fi
 
   if is_true "$show_cpu"; then
     cpu_content="#(${system_info_script_quoted} cpu)"
+    if [ -n "$cpu_icon" ]; then
+      cpu_content="$cpu_icon $cpu_content"
+    fi
     append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$cpu_content"
   fi
 
   if is_true "$show_memory"; then
     memory_content="#(${system_info_script_quoted} memory)"
+    if [ -n "$memory_icon" ]; then
+      memory_content="$memory_icon $memory_content"
+    fi
     append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "$memory_content"
   fi
 
   if is_true "$show_battery"; then
     battery_content="#(${system_info_script_quoted} battery)"
+    if [ -n "$battery_icon" ]; then
+      battery_content="$battery_icon $battery_content"
+    fi
     append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_WARNING" "$battery_content"
   fi
 
   if is_true "$show_host"; then
-    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "#H"
+    host_content="#H"
+    if [ -n "$host_icon" ]; then
+      host_content="$host_icon $host_content"
+    fi
+    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "$host_content"
   fi
 
   if is_true "$show_time"; then
-    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "%H:%M"
+    time_content="%H:%M"
+    if [ -n "$time_icon" ]; then
+      time_content="$time_icon $time_content"
+    fi
+    append_right_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "$time_content"
   fi
 
   if is_true "$show_git"; then

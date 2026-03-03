@@ -26,3 +26,4 @@ jobs:
           tests/status_git_format_test.sh
           tests/system_info_test.sh
           tests/cyberhud_pro_format_test.sh
+          tests/icons_test.sh
