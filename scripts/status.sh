@@ -25,7 +25,10 @@ build_separator() {
 }
 
 apply_status() {
-  local padding_size nerd_fonts show_session show_host show_time
+  local padding_size nerd_fonts show_session show_git show_host show_time
+  local git_content git_condition git_render git_render_escaped
+  local fallback_close fallback_close_escaped git_script_quoted
+  local has_static_right_segments
   local separator_left separator_right
   local status_left status_right
   local right_bg segment
@@ -35,6 +38,7 @@ apply_status() {
   separator_left="$(get_option "@cyberpunk-separator-left" "")"
   separator_right="$(get_option "@cyberpunk-separator-right" "")"
   show_session="$(get_option "@cyberpunk-show-session" "on")"
+  show_git="$(get_option "@cyberpunk-show-git" "on")"
   show_host="$(get_option "@cyberpunk-show-host" "on")"
   show_time="$(get_option "@cyberpunk-show-time" "on")"
 
@@ -55,6 +59,7 @@ apply_status() {
   fi
 
   right_bg="$CYBERPUNK_COLOR_BG"
+  has_static_right_segments=false
 
   if is_true "$show_host"; then
     if is_true "$nerd_fonts"; then
@@ -64,6 +69,7 @@ apply_status() {
     segment="$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "#H" "$padding_size")"
     status_right="$status_right$segment"
     right_bg="$CYBERPUNK_COLOR_SECONDARY"
+    has_static_right_segments=true
   fi
 
   if is_true "$show_time"; then
@@ -76,10 +82,36 @@ apply_status() {
     segment="$(build_segment "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_CYAN" "%H:%M" "$padding_size")"
     status_right="$status_right$segment"
     right_bg="$CYBERPUNK_COLOR_CYAN"
+    has_static_right_segments=true
   fi
 
-  if [ -n "$status_right" ] && is_true "$nerd_fonts"; then
-    status_right="$status_right$(build_separator "$CYBERPUNK_COLOR_BG" "$right_bg" "$separator_right")"
+  if is_true "$show_git"; then
+    printf -v git_script_quoted '%q' "$CURRENT_DIR/git_info.sh"
+    git_content="#(${git_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix})"
+    git_condition="#{!=:${git_content},}"
+
+    if is_true "$nerd_fonts"; then
+      git_render="$(build_separator "$CYBERPUNK_COLOR_PRIMARY" "$right_bg" "$separator_right")"
+      git_render="$git_render$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$git_content" "$padding_size")"
+      git_render="$git_render$(build_separator "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_PRIMARY" "$separator_right")"
+      git_render_escaped="${git_render//,/\\,}"
+
+      if [ "$has_static_right_segments" = true ]; then
+        fallback_close="$(build_separator "$CYBERPUNK_COLOR_BG" "$right_bg" "$separator_right")"
+        fallback_close_escaped="${fallback_close//,/\\,}"
+      else
+        fallback_close_escaped=""
+      fi
+
+      status_right="$status_right#{?${git_condition},${git_render_escaped},${fallback_close_escaped}}"
+    else
+      git_render="$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$git_content" "$padding_size")"
+      if [ -n "$status_right" ]; then
+        git_render=" $git_render"
+      fi
+      git_render_escaped="${git_render//,/\\,}"
+      status_right="$status_right#{?${git_condition},${git_render_escaped},}"
+    fi
   fi
 
   tmux set-option -gq status-left "$status_left"

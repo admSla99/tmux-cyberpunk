@@ -42,6 +42,9 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-separator-left` | `` | Left-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-separator-right` | `` | Right-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-show-session` | `on` | Show session block in status-left. |
+| `@cyberpunk-show-git` | `on` | Show Git segment in status-right (uses active pane path). |
+| `@cyberpunk-git-show-dirty` | `on` | Append `*` when working tree has changes. |
+| `@cyberpunk-git-prefix` | `git:` | Prefix rendered before branch name. |
 | `@cyberpunk-show-host` | `on` | Show host block in status-right. |
 | `@cyberpunk-show-time` | `on` | Show time block in status-right. |
 | `@cyberpunk-color-bg` | `#000000` | Base background color. |
@@ -54,6 +57,8 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 
 ```tmux
 set -g @cyberpunk-nerd-fonts 'on'
+set -g @cyberpunk-show-git 'on'
+set -g @cyberpunk-git-prefix 'branch:'
 set -g @cyberpunk-show-host 'off'
 set -g @cyberpunk-color-accent '#ffe600'
 ```
@@ -64,6 +69,8 @@ Run static checks locally:
 
 ```bash
 shellcheck cyberpunk.tmux scripts/*.sh
+tests/git_info_test.sh
+tests/status_git_format_test.sh
 ```
 
 ## Troubleshooting
