@@ -117,7 +117,7 @@ apply_status() {
 
   if is_true "$show_network"; then
     network_content="#(${system_info_script_quoted} network #{q:@cyberpunk-network-host} #{q:@cyberpunk-network-timeout-ms})"
-    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_SECONDARY" "$network_content"
+    append_right_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$network_content"
   fi
 
   if is_true "$show_cpu"; then
