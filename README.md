@@ -46,7 +46,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-padding` | `1` | Non-negative integer padding spaces inside each status segment (`0`, `1`, `2`, ...). Invalid values fallback to `1`. |
 | `@cyberpunk-interval` | `5` | Positive integer `status-interval` in seconds (`1`, `2`, ...). Invalid values fallback to `5`. |
 | `@cyberpunk-show-icons` | `on` | Show decorative icons before segment labels/values. |
-| `@cyberpunk-icon-pack` | `emoji` | Icon set: `emoji`, `nerd`, `ascii`, or `none`. |
+| `@cyberpunk-icon-pack` | `cyber` | Icon set: `emoji`, `nerd`, `cyber`, `ascii`, or `none`. |
 | `@cyberpunk-nerd-fonts` | `off` | Enable powerline separators (Nerd Fonts). |
 | `@cyberpunk-separator-left` | `` | Left-side separator when Nerd Fonts are enabled. |
 | `@cyberpunk-separator-right` | `` | Right-side separator when Nerd Fonts are enabled. |
@@ -78,7 +78,7 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 set -g @cyberpunk-nerd-fonts 'on'
 set -g @cyberpunk-separator-style 'ghost'
 set -g @cyberpunk-show-icons 'on'
-set -g @cyberpunk-icon-pack 'emoji'
+set -g @cyberpunk-icon-pack 'cyber'
 set -g @cyberpunk-show-git 'on'
 set -g @cyberpunk-git-show-updown 'on'
 set -g @cyberpunk-git-prefix 'branch:'

@@ -26,7 +26,7 @@ build_separator() {
 
 normalize_icon_pack() {
   case "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')" in
-    emoji | nerd | ascii | none)
+    emoji | nerd | cyber | ascii | none)
       printf '%s\n' "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')"
       ;;
     *)
@@ -69,6 +69,21 @@ icon_for() {
         battery) printf '󰁹' ;;
         host) printf '󰒋' ;;
         time) printf '󱑂' ;;
+      esac
+      ;;
+    cyber)
+      case "$slot" in
+        session) printf '◉' ;;
+        mode_prefix) printf '⌁' ;;
+        mode_copy) printf '⎘' ;;
+        mode_sync) printf '⇆' ;;
+        mode_live) printf '▹' ;;
+        network) printf '⟡' ;;
+        cpu) printf '◍' ;;
+        memory) printf '▦' ;;
+        battery) printf '▰' ;;
+        host) printf '⌂' ;;
+        time) printf '◷' ;;
       esac
       ;;
     ascii)
