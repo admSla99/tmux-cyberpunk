@@ -15,6 +15,18 @@ assert_contains() {
   fi
 }
 
+assert_not_contains() {
+  local haystack needle message
+  haystack="$1"
+  needle="$2"
+  message="$3"
+
+  if [[ "$haystack" == *"$needle"* ]]; then
+    printf 'ASSERT FAILED: %s\nDid not expect to contain: %s\nActual: %s\n' "$message" "$needle" "$haystack" >&2
+    exit 1
+  fi
+}
+
 assert_equals() {
   local expected actual message
   expected="$1"
@@ -38,9 +50,10 @@ tmux -L "$socket_a" run-shell "$REPO_ROOT/cyberpunk.tmux"
 status_right_git="$(tmux -L "$socket_a" show-options -gqv status-right)"
 tmux -L "$socket_a" kill-server
 
-assert_contains "$status_right_git" "#{?#{!=:#(" "git segment should be wrapped by tmux conditional"
+assert_contains "$status_right_git" "scripts/git_segment.sh" "git segment should call dedicated runtime renderer script"
 assert_contains "$status_right_git" "#{q:pane_current_path}" "pane path should be shell-escaped using tmux q modifier"
 assert_contains "$status_right_git" "#{q:@cyberpunk-git-prefix}" "git prefix should be shell-escaped using tmux q modifier"
+assert_not_contains "$status_right_git" "#{?#{!=:#(" "git segment must not use tmux conditional around #() command"
 
 tmux -L "$socket_b" -f /dev/null new-session -d -s test -c /tmp
 tmux -L "$socket_b" set-option -g @cyberpunk-show-host off

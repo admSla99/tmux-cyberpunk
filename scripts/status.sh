@@ -26,8 +26,8 @@ build_separator() {
 
 apply_status() {
   local padding_size nerd_fonts show_session show_git show_host show_time
-  local git_content git_condition git_render git_render_escaped
-  local fallback_close fallback_close_escaped git_script_quoted
+  local git_segment_script_quoted
+  local color_bg_quoted color_primary_quoted color_accent_quoted right_bg_quoted has_static_quoted
   local has_static_right_segments
   local separator_left separator_right
   local status_left status_right
@@ -86,32 +86,14 @@ apply_status() {
   fi
 
   if is_true "$show_git"; then
-    printf -v git_script_quoted '%q' "$CURRENT_DIR/git_info.sh"
-    git_content="#(${git_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix})"
-    git_condition="#{!=:${git_content},}"
+    printf -v git_segment_script_quoted '%q' "$CURRENT_DIR/git_segment.sh"
+    printf -v color_bg_quoted '%q' "$CYBERPUNK_COLOR_BG"
+    printf -v color_primary_quoted '%q' "$CYBERPUNK_COLOR_PRIMARY"
+    printf -v color_accent_quoted '%q' "$CYBERPUNK_COLOR_ACCENT"
+    printf -v right_bg_quoted '%q' "$right_bg"
+    printf -v has_static_quoted '%q' "$has_static_right_segments"
 
-    if is_true "$nerd_fonts"; then
-      git_render="$(build_separator "$CYBERPUNK_COLOR_PRIMARY" "$right_bg" "$separator_right")"
-      git_render="$git_render$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$git_content" "$padding_size")"
-      git_render="$git_render$(build_separator "$CYBERPUNK_COLOR_BG" "$CYBERPUNK_COLOR_PRIMARY" "$separator_right")"
-      git_render_escaped="${git_render//,/\\,}"
-
-      if [ "$has_static_right_segments" = true ]; then
-        fallback_close="$(build_separator "$CYBERPUNK_COLOR_BG" "$right_bg" "$separator_right")"
-        fallback_close_escaped="${fallback_close//,/\\,}"
-      else
-        fallback_close_escaped=""
-      fi
-
-      status_right="$status_right#{?${git_condition},${git_render_escaped},${fallback_close_escaped}}"
-    else
-      git_render="$(build_segment "$CYBERPUNK_COLOR_ACCENT" "$CYBERPUNK_COLOR_PRIMARY" "$git_content" "$padding_size")"
-      if [ -n "$status_right" ]; then
-        git_render=" $git_render"
-      fi
-      git_render_escaped="${git_render//,/\\,}"
-      status_right="$status_right#{?${git_condition},${git_render_escaped},}"
-    fi
+    status_right="$status_right#(${git_segment_script_quoted} #{q:pane_current_path} #{q:@cyberpunk-git-show-dirty} #{q:@cyberpunk-git-prefix} #{q:@cyberpunk-padding} #{q:@cyberpunk-nerd-fonts} #{q:@cyberpunk-separator-right} ${color_bg_quoted} ${color_primary_quoted} ${color_accent_quoted} ${right_bg_quoted} ${has_static_quoted})"
   fi
 
   tmux set-option -gq status-left "$status_left"

@@ -1,5 +1,7 @@
 # tmux-cyberpunk
 
+
+
 A `tmux` theme plugin inspired by Cyberpunk 2077 aesthetics, built for
 `tmux 3.2+` and installable with [TPM](https://github.com/tmux-plugins/tpm).
 
@@ -70,6 +72,7 @@ Run static checks locally:
 ```bash
 shellcheck cyberpunk.tmux scripts/*.sh
 tests/git_info_test.sh
+tests/git_segment_test.sh
 tests/status_git_format_test.sh
 ```
 

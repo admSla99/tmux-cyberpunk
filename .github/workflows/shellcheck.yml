@@ -22,4 +22,5 @@ jobs:
       - name: Run git info tests
         run: |
           tests/git_info_test.sh
+          tests/git_segment_test.sh
           tests/status_git_format_test.sh
