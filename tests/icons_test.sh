@@ -70,7 +70,7 @@ assert_not_contains "$status_right_no_icons" "🌐" "network segment should hide
 
 tmux -L "$socket_c" -f /dev/null new-session -d -s test -c /tmp
 tmux -L "$socket_c" set-option -g @cyberpunk-show-icons on
-tmux -L "$socket_c" set-option -g @cyberpunk-icon-pack cyber
+tmux -L "$socket_c" set-option -g @cyberpunk-icon-pack cyber-fa
 tmux -L "$socket_c" set-option -g @cyberpunk-show-git off
 tmux -L "$socket_c" set-option -g @cyberpunk-show-host off
 tmux -L "$socket_c" set-option -g @cyberpunk-show-time off
@@ -79,12 +79,12 @@ tmux -L "$socket_c" set-option -g @cyberpunk-show-memory off
 tmux -L "$socket_c" set-option -g @cyberpunk-show-battery off
 tmux -L "$socket_c" set-option -g @cyberpunk-show-network on
 tmux -L "$socket_c" run-shell "$REPO_ROOT/cyberpunk.tmux"
-status_left_cyber="$(tmux -L "$socket_c" show-options -gqv status-left)"
-status_right_cyber="$(tmux -L "$socket_c" show-options -gqv status-right)"
+status_left_cyber_fa="$(tmux -L "$socket_c" show-options -gqv status-left)"
+status_right_cyber_fa="$(tmux -L "$socket_c" show-options -gqv status-right)"
 tmux -L "$socket_c" kill-server
 
-assert_contains "$status_left_cyber" "◉" "session segment should include cyber icon"
-assert_contains "$status_left_cyber" "▹" "mode segment should include cyber live icon"
-assert_contains "$status_right_cyber" "⟡" "network segment should include cyber network icon"
+assert_contains "$status_left_cyber_fa" "" "session segment should include cyber-fa icon"
+assert_contains "$status_left_cyber_fa" "" "mode segment should include cyber-fa live icon"
+assert_contains "$status_right_cyber_fa" "" "network segment should include cyber-fa network icon"
 
 printf 'icons_test: PASS\n'

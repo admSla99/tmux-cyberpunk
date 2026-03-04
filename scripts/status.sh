@@ -26,7 +26,7 @@ build_separator() {
 
 normalize_icon_pack() {
   case "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')" in
-    emoji | nerd | cyber | ascii | none)
+    emoji | nerd | cyber-fa | ascii | none)
       printf '%s\n' "$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')"
       ;;
     *)
@@ -71,19 +71,19 @@ icon_for() {
         time) printf '󱑂' ;;
       esac
       ;;
-    cyber)
+    cyber-fa)
       case "$slot" in
-        session) printf '◉' ;;
-        mode_prefix) printf '⌁' ;;
-        mode_copy) printf '⎘' ;;
-        mode_sync) printf '⇆' ;;
-        mode_live) printf '▹' ;;
-        network) printf '⟡' ;;
-        cpu) printf '◍' ;;
-        memory) printf '▦' ;;
-        battery) printf '▰' ;;
-        host) printf '⌂' ;;
-        time) printf '◷' ;;
+        session) printf '' ;;
+        mode_prefix) printf '⌨' ;;
+        mode_copy) printf '' ;;
+        mode_sync) printf '' ;;
+        mode_live) printf '' ;;
+        network) printf '' ;;
+        cpu) printf '' ;;
+        memory) printf '' ;;
+        battery) printf '' ;;
+        host) printf '' ;;
+        time) printf '' ;;
       esac
       ;;
     ascii)
@@ -185,7 +185,7 @@ apply_status() {
   show_host="$(get_option "@cyberpunk-show-host" "on")"
   show_time="$(get_option "@cyberpunk-show-time" "on")"
   show_icons="$(get_option "@cyberpunk-show-icons" "on")"
-  icon_pack="$(normalize_icon_pack "$(get_option "@cyberpunk-icon-pack" "emoji")")"
+  icon_pack="$(normalize_icon_pack "$(get_option "@cyberpunk-icon-pack" "cyber-fa")")"
 
   session_icon=""
   mode_prefix_icon=""

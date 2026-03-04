@@ -11,7 +11,7 @@ set_defaults() {
   upsert_option "@cyberpunk-padding" "1"
   upsert_option "@cyberpunk-interval" "5"
   upsert_option "@cyberpunk-show-icons" "on"
-  upsert_option "@cyberpunk-icon-pack" "cyber"
+  upsert_option "@cyberpunk-icon-pack" "cyber-fa"
   upsert_option "@cyberpunk-nerd-fonts" "off"
   upsert_option "@cyberpunk-separator-left" ""
   upsert_option "@cyberpunk-separator-right" ""
