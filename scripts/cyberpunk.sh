@@ -2,9 +2,13 @@
 
 CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# shellcheck source=./utils.sh
 source "$CURRENT_DIR/utils.sh"
+# shellcheck source=./palette.sh
 source "$CURRENT_DIR/palette.sh"
+# shellcheck source=./theme.sh
 source "$CURRENT_DIR/theme.sh"
+# shellcheck source=./status.sh
 source "$CURRENT_DIR/status.sh"
 
 set_defaults() {

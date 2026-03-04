@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2034
+# Global palette variables are consumed across sourced plugin scripts.
 
 CYBERPUNK_DEFAULT_BG="#000000"
 CYBERPUNK_DEFAULT_PRIMARY="#c5003c"

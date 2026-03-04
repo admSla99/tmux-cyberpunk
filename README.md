@@ -126,7 +126,7 @@ set -g @cyberpunk-window-active-style 'bg=#181818,fg=#f0f0f0'
 Run static checks locally:
 
 ```bash
-shellcheck cyberpunk.tmux scripts/*.sh
+shellcheck -x cyberpunk.tmux scripts/*.sh
 tests/git_info_test.sh
 tests/git_segment_test.sh
 tests/status_git_format_test.sh

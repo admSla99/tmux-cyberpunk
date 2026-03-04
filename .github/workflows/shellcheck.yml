@@ -17,7 +17,7 @@ jobs:
           sudo apt-get install -y shellcheck
 
       - name: Run shellcheck
-        run: shellcheck cyberpunk.tmux scripts/*.sh
+        run: shellcheck -x cyberpunk.tmux scripts/*.sh
 
       - name: Run git info tests
         run: |
@@ -27,3 +27,4 @@ jobs:
           tests/system_info_test.sh
           tests/cyberhud_pro_format_test.sh
           tests/icons_test.sh
+          tests/window_profile_test.sh
