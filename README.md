@@ -65,6 +65,9 @@ All options are global tmux options and use the `@cyberpunk-*` namespace.
 | `@cyberpunk-show-battery` | `on` | Show battery/AC segment. |
 | `@cyberpunk-show-host` | `on` | Show host block in status-right. |
 | `@cyberpunk-show-time` | `on` | Show time block in status-right. |
+| `@cyberpunk-window-profile` | `simple` | Window focus profile for pane backgrounds: `simple`, `bold`, or `ultra`. |
+| `@cyberpunk-window-style` | _(unset)_ | Optional direct override for `window-style` (for example `bg=#070b12,fg=#738399`). |
+| `@cyberpunk-window-active-style` | _(unset)_ | Optional direct override for `window-active-style` (for example `bg=#0d1422,fg=#d7e3ef`). |
 | `@cyberpunk-color-bg` | `#000000` | Base background color. |
 | `@cyberpunk-color-primary` | `#c5003c` | Primary segment background color. |
 | `@cyberpunk-color-secondary` | `#880425` | Secondary segment background color. |
@@ -85,8 +88,37 @@ set -g @cyberpunk-git-prefix 'branch:'
 set -g @cyberpunk-show-network 'off'
 set -g @cyberpunk-show-battery 'off'
 set -g @cyberpunk-show-host 'off'
+set -g @cyberpunk-window-profile 'bold'
 set -g @cyberpunk-color-accent '#ffe600'
 set -g @cyberpunk-color-warning '#f3e600'
+```
+
+### Window Focus Profiles
+
+Switch profiles at runtime:
+
+```bash
+tmux set -g @cyberpunk-window-profile simple
+tmux run-shell ~/.tmux/plugins/tmux-cyberpunk/cyberpunk.tmux
+```
+
+Available profiles:
+
+- `simple`
+  - `window-style`: `bg=#070b12,fg=#738399`
+  - `window-active-style`: `bg=#0d1422,fg=#d7e3ef`
+- `bold`
+  - `window-style`: `bg=#06090f,fg=#67788f`
+  - `window-active-style`: `bg=#111b2e,fg=#eef6ff`
+- `ultra`
+  - `window-style`: `bg=#05060a,fg=#665a78`
+  - `window-active-style`: `bg=#0a1020,fg=#55ead4`
+
+Manual overrides (higher priority than profile):
+
+```tmux
+set -g @cyberpunk-window-style 'bg=#101010,fg=#8f8f8f'
+set -g @cyberpunk-window-active-style 'bg=#181818,fg=#f0f0f0'
 ```
 
 ## Development
@@ -101,6 +133,7 @@ tests/status_git_format_test.sh
 tests/system_info_test.sh
 tests/cyberhud_pro_format_test.sh
 tests/icons_test.sh
+tests/window_profile_test.sh
 ```
 
 ## Troubleshooting

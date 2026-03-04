@@ -30,6 +30,7 @@ set_defaults() {
   upsert_option "@cyberpunk-show-battery" "on"
   upsert_option "@cyberpunk-show-host" "on"
   upsert_option "@cyberpunk-show-time" "on"
+  upsert_option "@cyberpunk-window-profile" "simple"
 
   upsert_option "@cyberpunk-color-bg" "$CYBERPUNK_DEFAULT_BG"
   upsert_option "@cyberpunk-color-primary" "$CYBERPUNK_DEFAULT_PRIMARY"
