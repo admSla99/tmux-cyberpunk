@@ -155,7 +155,7 @@ append_right_segment() {
 }
 
 apply_status() {
-  local padding_size nerd_fonts show_session show_mode show_git
+  local padding_size status_left_length status_right_length nerd_fonts show_session show_mode show_git
   local show_network show_cpu show_memory show_battery show_host show_time
   local show_icons icon_pack
   local session_icon mode_prefix_icon mode_copy_icon mode_sync_icon mode_live_icon
@@ -171,6 +171,8 @@ apply_status() {
   local right_bg
 
   padding_size="$(coerce_non_negative_integer "$(get_option "@cyberpunk-padding" "1")" "1")"
+  status_left_length="$(coerce_positive_integer "$(get_option "@cyberpunk-status-left-length" "100")" "100")"
+  status_right_length="$(coerce_positive_integer "$(get_option "@cyberpunk-status-right-length" "250")" "250")"
   nerd_fonts="$(get_option "@cyberpunk-nerd-fonts" "off")"
   separator_left="$(get_option "@cyberpunk-separator-left" "")"
   separator_right="$(get_option "@cyberpunk-separator-right" "")"
@@ -299,6 +301,6 @@ apply_status() {
 
   tmux set-option -gq status-left "$status_left"
   tmux set-option -gq status-right "$status_right"
-  tmux set-option -gq status-left-length 100
-  tmux set-option -gq status-right-length 100
+  tmux set-option -gq status-left-length "$status_left_length"
+  tmux set-option -gq status-right-length "$status_right_length"
 }

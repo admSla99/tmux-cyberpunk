@@ -38,6 +38,9 @@ set -g @cyberpunk-git-show-updown 'on'
 set -g @cyberpunk-show-network 'on'
 set -g @cyberpunk-show-battery 'on'
 set -g @cyberpunk-show-host 'off'
+
+# prevent long git branch names from being cut too early
+set -g @cyberpunk-status-right-length '250'
 ```
 
 Apply without restarting tmux:
@@ -79,6 +82,8 @@ All options use `@cyberpunk-*`.
 - `@cyberpunk-git-show-updown`: append `↑N`/`↓N` when diverged from upstream
 - `@cyberpunk-network-host`: ping host for `NET` segment (default `1.1.1.1`)
 - `@cyberpunk-network-timeout-ms`: network probe timeout (default `250`)
+- `@cyberpunk-status-left-length`: max visible width of left status (default `100`)
+- `@cyberpunk-status-right-length`: max visible width of right status (default `250`)
 - `@cyberpunk-color-*`: palette overrides (`bg`, `primary`, `secondary`, `accent`, `cyan`, `warning`)
 
 ## Troubleshooting

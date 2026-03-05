@@ -52,6 +52,7 @@ tmux -L "$socket_a" set-option -g @cyberpunk-show-battery off
 tmux -L "$socket_a" set-option -g @cyberpunk-show-git on
 tmux -L "$socket_a" run-shell "$REPO_ROOT/cyberpunk.tmux"
 status_right_git="$(tmux -L "$socket_a" show-options -gqv status-right)"
+status_right_length_git="$(tmux -L "$socket_a" show-options -gqv status-right-length)"
 tmux -L "$socket_a" kill-server
 
 assert_contains "$status_right_git" "scripts/git_segment.sh" "git segment should call dedicated runtime renderer script"
@@ -60,6 +61,7 @@ assert_contains "$status_right_git" "#{q:@cyberpunk-git-prefix}" "git prefix sho
 assert_contains "$status_right_git" "#{q:@cyberpunk-git-show-updown}" "up/down toggle should be shell-escaped using tmux q modifier"
 assert_contains "$status_right_git" "#{q:@cyberpunk-separator-style}" "separator style should be shell-escaped using tmux q modifier"
 assert_not_contains "$status_right_git" "#{?#{!=:#(" "git segment must not use tmux conditional around #() command"
+assert_equals "250" "$status_right_length_git" "status-right-length should default to cyberpunk value"
 
 tmux -L "$socket_b" -f /dev/null new-session -d -s test -c /tmp
 tmux -L "$socket_b" set-option -g @cyberpunk-show-host off
@@ -69,10 +71,13 @@ tmux -L "$socket_b" set-option -g @cyberpunk-show-cpu off
 tmux -L "$socket_b" set-option -g @cyberpunk-show-memory off
 tmux -L "$socket_b" set-option -g @cyberpunk-show-battery off
 tmux -L "$socket_b" set-option -g @cyberpunk-show-git off
+tmux -L "$socket_b" set-option -g @cyberpunk-status-right-length 333
 tmux -L "$socket_b" run-shell "$REPO_ROOT/cyberpunk.tmux"
 status_right_no_git="$(tmux -L "$socket_b" show-options -gqv status-right)"
+status_right_length_custom="$(tmux -L "$socket_b" show-options -gqv status-right-length)"
 tmux -L "$socket_b" kill-server
 
 assert_equals "" "$status_right_no_git" "status-right should stay empty when git/host/time segments are disabled"
+assert_equals "333" "$status_right_length_custom" "custom status-right-length should be respected"
 
 printf 'status_git_format_test: PASS\n'
