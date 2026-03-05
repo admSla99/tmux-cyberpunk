@@ -20,6 +20,11 @@ Inside tmux:
 1. `prefix + I`
 2. `tmux source-file ~/.tmux.conf`
 
+## Prerequisites
+
+- Use a Nerd Font in your terminal for correct icon rendering in the status bar when using icon packs with glyphs (`cyber-fa` or `nerd`).
+- If you do not use a Nerd Font, set `@cyberpunk-icon-pack 'ascii'` (or `none`) to avoid missing-glyph squares.
+
 ## Quick Config
 
 ```tmux
