@@ -6,6 +6,16 @@ Cyberpunk 2077 inspired `tmux` theme plugin for `tmux 3.2+`, installable via
 Default palette:
 `#000000`, `#c5003c`, `#880425`, `#f3e600`, `#55ead4`
 
+## Preview
+
+Left side of the status bar with session and active window segments:
+
+![tmux-cyberpunk left status preview](docs/images/statusbar-leftsite.png)
+
+Right side of the status bar with system info and git status segments:
+
+![tmux-cyberpunk right status preview](docs/images/statusbar-rightsite.png)
+
 ## Install (TPM)
 
 Add to `~/.tmux.conf`:
