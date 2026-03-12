@@ -84,7 +84,7 @@ status_right_cyber_fa="$(tmux -L "$socket_c" show-options -gqv status-right)"
 tmux -L "$socket_c" kill-server
 
 assert_contains "$status_left_cyber_fa" "" "session segment should include cyber-fa icon"
-assert_contains "$status_left_cyber_fa" "" "mode segment should include cyber-fa live icon"
+assert_contains "$status_left_cyber_fa" "" "mode segment should include cyber-fa live icon"
 assert_contains "$status_right_cyber_fa" "" "network segment should include cyber-fa network icon"
 
 printf 'icons_test: PASS\n'

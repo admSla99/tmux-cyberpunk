@@ -77,7 +77,7 @@ icon_for() {
         mode_prefix) printf '⌨' ;;
         mode_copy) printf '' ;;
         mode_sync) printf '' ;;
-        mode_live) printf '' ;;
+        mode_live) printf '' ;;
         network) printf '' ;;
         cpu) printf '' ;;
         memory) printf '' ;;
